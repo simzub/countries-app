@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
-import sorting from '../utils/sort';
+import sortingData from '../utils/sorting-data';
 
 export interface Country {
   name: string;
@@ -13,6 +13,7 @@ export default function CountriesList() {
   const [data, setData] = useState<Country[]>([]);
   const [sortOption, setSortOption] = useState('name-asc');
   const [areaFilter, setAreaFilter] = useState(false);
+  const [oceaniaFilter, setOceaniaFilter] = useState(false);
   const getData = async () => {
     const { data } = await axios.get('https://restcountries.com/v2/all?fields=name,region,area');
     setData(data);
@@ -21,19 +22,10 @@ export default function CountriesList() {
     getData();
   }, []);
 
-  const visibleData = useMemo(() => sorting(data, sortOption), [data, sortOption]);
-  console.log(visibleData);
-
-  // const handleFilter = () => {
-  //   if (!areaFilter) {
-  //     setAreaFilter(!areaFilter);
-  //     const filteredData = [...sortData].filter((item) => item.area! < 65300);
-  //     setStateData(filteredData);
-  //   } else {
-  //     setAreaFilter(!areaFilter);
-  //     setStateData(sortData);
-  //   }
-  // };
+  const visibleData = useMemo(
+    () => sortingData(data, sortOption, areaFilter, oceaniaFilter),
+    [data, sortOption, areaFilter, oceaniaFilter]
+  );
 
   return (
     <div className="p-8 flex flex-col gap-8">
@@ -46,27 +38,20 @@ export default function CountriesList() {
       </div>
       <div id="filtersandtoggles" className="flex gap-8 justify-between">
         <div id="toggles" className="flex gap-8">
-          {areaFilter ? (
-            <button
-              // onClick={() => handleFilter()}
-              type="button"
-              className="inline-flex items-center rounded-md border border-gray-300 bg-indigo-200 px-4 py-2 text-base font-medium text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              Smaller than
-            </button>
-          ) : (
-            <button
-              // onClick={() => handleFilter()}
-              type="button"
-              className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2  hover:bg-gray-50"
-            >
-              Smaller than
-            </button>
-          )}
+          <button
+            onClick={() => setAreaFilter(!areaFilter)}
+            type="button"
+            className="inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-base font-medium text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            style={{ backgroundColor: areaFilter ? '#C7D2FE' : '#FFFFFF' }}
+          >
+            {'<'} Lithuania
+          </button>
 
           <button
+            onClick={() => setOceaniaFilter(!oceaniaFilter)}
             type="button"
-            className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 hover:bg-gray-50"
+            className="inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-base font-medium text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 hover:bg-gray-50"
+            style={{ backgroundColor: oceaniaFilter ? '#C7D2FE' : '#FFFFFF' }}
           >
             Only Oceania
           </button>
