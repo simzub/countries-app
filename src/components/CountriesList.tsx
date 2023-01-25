@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
 import sortingData from '../utils/sorting-data';
+import Paginate from './Paginate';
 
 export interface Country {
   name: string;
@@ -14,6 +15,11 @@ export default function CountriesList() {
   const [sortOption, setSortOption] = useState('name-asc');
   const [areaFilter, setAreaFilter] = useState(false);
   const [oceaniaFilter, setOceaniaFilter] = useState(false);
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [countriesPerPage, setCountriesPerPage] = useState(10);
+  // Pagination
   const getData = async () => {
     const { data } = await axios.get('https://restcountries.com/v2/all?fields=name,region,area');
     setData(data);
@@ -23,9 +29,29 @@ export default function CountriesList() {
   }, []);
 
   const visibleData = useMemo(
-    () => sortingData(data, sortOption, areaFilter, oceaniaFilter),
+    () => sortingData(data, sortOption, areaFilter, oceaniaFilter, setCurrentPage),
     [data, sortOption, areaFilter, oceaniaFilter]
   );
+
+  // Pagination
+  const indexOfLastCountry = currentPage * countriesPerPage;
+  const indexOfFirstCountry = indexOfLastCountry - countriesPerPage;
+  const currentCountries = visibleData.slice(indexOfFirstCountry, indexOfLastCountry);
+  const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const previousPage = () => {
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const nextPage = () => {
+    if (currentPage !== Math.ceil(visibleData.length / countriesPerPage)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   return (
     <div className="p-8 flex flex-col gap-8">
@@ -67,8 +93,11 @@ export default function CountriesList() {
             </select>
           </div>
           <div>
-            <select className="mt-1 block w-full h-full bg-white rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 focus:ring-2 sm:text-sm">
-              <option value="5">10 items per page</option>
+            <select
+              onChange={(e) => setCountriesPerPage(+e.target.value)}
+              className="mt-1 block w-full h-full bg-white rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 focus:ring-2 sm:text-sm"
+            >
+              <option value="10">10 items per page</option>
               <option value="25">25 items per page</option>
               <option value="50">50 items per page</option>
             </select>
@@ -78,7 +107,7 @@ export default function CountriesList() {
       <div className="flex-auto  justify-center ">
         <div className="overflow-hidden  bg-white shadow sm:rounded-md ">
           <ul className="divide-y divide-gray-200">
-            {visibleData.map((data) => (
+            {currentCountries.map((data) => (
               <li key={data.name}>
                 <div className="flex flex-col gap-2 p-4 sm:px-6">
                   <div className="text-xl font-medium">{data.name}</div>
@@ -92,6 +121,14 @@ export default function CountriesList() {
           </ul>
         </div>
       </div>
+      <Paginate
+        totalCountries={visibleData.length}
+        countriesPerPage={countriesPerPage}
+        paginate={paginate}
+        previousPage={previousPage}
+        nextPage={nextPage}
+        currentPage={currentPage}
+      />
     </div>
   );
 }
