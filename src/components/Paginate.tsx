@@ -15,7 +15,7 @@ export default function Paginate(props: PaginateProps) {
   }
   return (
     <div>
-      <ul className="flex justify-center items-center mt-4 gap-4">
+      <ul className="flex justify-center items-center mt-4 gap-4 flex-wrap">
         <li
           onClick={props.previousPage}
           className="text-base text-gray-400 font-semibold hover:text-gray-700  py-2 px-2 rounded-lg cursor-pointer"

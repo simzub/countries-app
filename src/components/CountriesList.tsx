@@ -62,12 +62,12 @@ export default function CountriesList() {
           </h1>
         </div>
       </div>
-      <div id="filtersandtoggles" className="flex gap-8 justify-between">
+      <div id="filtersandtoggles" className="flex flex-col sm:flex-row gap-2 sm:gap-8 justify-between">
         <div id="toggles" className="flex gap-8">
           <button
             onClick={() => setAreaFilter(!areaFilter)}
             type="button"
-            className="inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-base font-medium text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            className="inline-flex justify-center w-full items-center rounded-md border border-gray-300 px-4 py-2 text-base font-medium text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             style={{ backgroundColor: areaFilter ? '#C7D2FE' : '#FFFFFF' }}
           >
             {'<'} Lithuania
@@ -76,7 +76,7 @@ export default function CountriesList() {
           <button
             onClick={() => setOceaniaFilter(!oceaniaFilter)}
             type="button"
-            className="inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-base font-medium text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 hover:bg-gray-50"
+            className="inline-flex items-center w-full justify-center rounded-md border border-gray-300 px-4 py-2 text-base font-medium text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 hover:bg-gray-50"
             style={{ backgroundColor: oceaniaFilter ? '#C7D2FE' : '#FFFFFF' }}
           >
             Only Oceania

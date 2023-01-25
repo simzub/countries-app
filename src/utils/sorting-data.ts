@@ -5,7 +5,7 @@ export default function sortingData(
   sortOption: string,
   areaFilter: boolean,
   oceaniaFilter: boolean,
-  setCurrentPage: any
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>
 ) {
   let updatedData = [...data];
   const lithuaniaArea = updatedData.find((country) => country.name === 'Lithuania')?.area || 0;
