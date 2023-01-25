@@ -1,4 +1,4 @@
-import { Country } from './../components/CountriesList';
+import { Country } from '../components/MainPage';
 
 export default function sortingData(
   data: Country[],
